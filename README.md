@@ -13,6 +13,8 @@ asymmetry shows up in the thresholds, the confidence math, and the label UX.
 > Full design rationale, the architecture diagram, the five spec questions, and the
 > AI Tool Plan live in [planning.md](planning.md).
 
+**Demo video:** [https://youtu.be/JvkKj-4TZmo](https://youtu.be/JvkKj-4TZmo)
+
 ---
 
 ## Setup
