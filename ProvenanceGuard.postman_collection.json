@@ -1,0 +1,110 @@
+{
+  "info": {
+    "name": "Provenance Guard",
+    "description": "Test collection for the Provenance Guard API. Run requests top-to-bottom: Submit saves the returned content_id into a collection variable, which Appeal then reuses automatically.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://127.0.0.1:5000" },
+    { "key": "content_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Index (GET /)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/", "host": ["{{baseUrl}}"], "path": [""] }
+      }
+    },
+    {
+      "name": "Health (GET /health)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/health", "host": ["{{baseUrl}}"], "path": ["health"] }
+      }
+    },
+    {
+      "name": "Submit - AI-ish (POST /submit)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const json = pm.response.json();",
+              "pm.test('status 200', () => pm.response.to.have.status(200));",
+              "if (json.content_id) {",
+              "  pm.collectionVariables.set('content_id', json.content_id);",
+              "  console.log('Saved content_id:', json.content_id);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"text\": \"Artificial intelligence represents a transformative paradigm shift in modern society. It is important to note that while the benefits are numerous, stakeholders across various sectors must collaborate to ensure responsible deployment.\",\n  \"creator_id\": \"postman-ai\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/submit", "host": ["{{baseUrl}}"], "path": ["submit"] }
+      }
+    },
+    {
+      "name": "Submit - human-ish (POST /submit)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const json = pm.response.json();",
+              "pm.test('status 200', () => pm.response.to.have.status(200));",
+              "if (json.content_id) {",
+              "  pm.collectionVariables.set('content_id', json.content_id);",
+              "  console.log('Saved content_id:', json.content_id);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"text\": \"ok so i finally tried that new ramen place downtown and honestly? underwhelming. the broth was fine but they put WAY too much sodium in it and i was thirsty for like three hours after\",\n  \"creator_id\": \"postman-human\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/submit", "host": ["{{baseUrl}}"], "path": ["submit"] }
+      }
+    },
+    {
+      "name": "Appeal (POST /appeal)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"content_id\": \"{{content_id}}\",\n  \"creator_reasoning\": \"I wrote this myself from personal experience. I am a non-native English speaker, so my style may read as more formal than typical.\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/appeal", "host": ["{{baseUrl}}"], "path": ["appeal"] }
+      }
+    },
+    {
+      "name": "Log (GET /log)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/log?limit=10",
+          "host": ["{{baseUrl}}"],
+          "path": ["log"],
+          "query": [{ "key": "limit", "value": "10" }]
+        }
+      }
+    }
+  ]
+}
